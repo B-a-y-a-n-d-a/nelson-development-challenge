@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Webhook API Tester</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 2rem;
+      max-width: 600px;
+      margin: auto;
+    }
+    input, button {
+      padding: 10px;
+      margin: 0.5rem 0;
+      width: 100%;
+    }
+    pre {
+      background: #f4f4f4;
+      padding: 1rem;
+      border-radius: 5px;
+      overflow: auto;
+    }
+  </style>
+</head>
+<body>
+  <h2>Webhook API Validation Tester</h2>
+  <form id="testForm">
+    <label>Email address</label>
+    <input type="email" id="email" placeholder="your@email.com" required />
+    
+    <label>API Endpoint URL</label>
+    <input type="url" id="url" placeholder="https://your-api.vercel.app/webhook" required />
+    
+    <button type="submit">Test API</button>
+  </form>
+
+  <h3>Response:</h3>
+  <pre id="result">No request made yet.</pre>
+
+  <script>
+    const form = document.getElementById('testForm');
+    const resultBox = document.getElementById('result');
+
+    form.onsubmit = async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('email').value.trim();
+      const url = document.getElementById('url').value.trim();
+
+      const validatorUrl = `https://yhxzjyykdsfkdrmdxgho.supabase.co/functions/v1/junior-dev?url=${encodeURIComponent(url)}&email=${encodeURIComponent(email)}`;
+
+      resultBox.textContent = 'Loading...';
+
+      try {
+        const response = await fetch(validatorUrl);
+        const text = await response.text();
+        resultBox.textContent = text;
+      } catch (error) {
+        resultBox.textContent = 'Error testing your API: ' + error.message;
+      }
+    };
+  </script>
+</body>
+</html>
