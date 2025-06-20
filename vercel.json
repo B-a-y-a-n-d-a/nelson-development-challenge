@@ -6,6 +6,13 @@
       "src": "/webhook",
       "methods": ["POST"],
       "dest": "/index.js"
+    },
+    {
+      "handle": "filesystem"
+    },
+    {
+      "src": "/.*",
+      "dest": "/index.html"
     }
   ]
 }
