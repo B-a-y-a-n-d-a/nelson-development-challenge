@@ -1,15 +1,29 @@
 const express = require('express');
+const bodyParser = require('body-parser');
+const path = require('path');
+
 const app = express();
+const PORT = process.env.PORT || 3000;
 
-app.use(express.json());
+app.use(bodyParser.json());
 
-app.post('/webhook', (req, res) => {
-  const { data } = req.body;
-  if (!data || typeof data !== 'string') {
-    return res.status(400).json({ error: 'Invalid or missing "data" field' });
-  }
-  const sortedArray = data.split('').sort();
-  return res.json({ word: sortedArray });
+// ✅ Serve static files
+app.use(express.static(path.join(__dirname, 'public')));
+
+// ✅ Default route to index.html
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-module.exports = app;
+// POST /webhook route
+app.post('/webhook', (req, res) => {
+  const input = req.body.data;
+  if (!input || typeof input !== 'string') {
+    return res.status(400).json({ error: 'Invalid input string' });
+  }
+
+  const word = input.split('').sort();
+  res.json({ word });
+});
+
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
